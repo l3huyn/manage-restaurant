@@ -14,9 +14,6 @@ public class OrderDTO {
     @JsonProperty("table_id")
     private Long diningTableId;
 
-    @JsonProperty("customer_id")
-    private Long customerId;
-
     @JsonProperty("fullname")
     private String fullName;
 
@@ -33,7 +30,7 @@ public class OrderDTO {
     @JsonProperty("payment_method")
     private String paymentMethod;
 
-    private int discount;
+    private Float discount;
 
     @JsonProperty("the_discounted_price")
     private Float theDiscountedPrice;

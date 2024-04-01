@@ -1,8 +1,8 @@
 package com.project.restaurant.controllers;
 
-import com.project.restaurant.dtos.EmployeeDTO;
-import com.project.restaurant.models.Employee;
-import com.project.restaurant.services.EmployeeService;
+import com.project.restaurant.dtos.UserDTO;
+import com.project.restaurant.models.User;
+import com.project.restaurant.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/employees")
+@RequestMapping("api/v1/users")
 @RequiredArgsConstructor
-public class EmployeeController {
+public class UserController {
 
-    private final EmployeeService employeeService;
+    private final UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<?> createEmployee(
-            @Valid @RequestBody EmployeeDTO employeeDTO,
+    public ResponseEntity<?> createUser(
+            @Valid @RequestBody UserDTO userDTO,
             BindingResult result
     ) {
 
@@ -38,9 +38,9 @@ public class EmployeeController {
                 return ResponseEntity.badRequest().body(errorMessage);
             }
 
-            employeeService.createEmployee(employeeDTO);
+            User newUser =  userService.createUser(userDTO);
 
-            return ResponseEntity.ok("Created employee successfully");
+            return ResponseEntity.ok(newUser);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -48,10 +48,10 @@ public class EmployeeController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEmployeeById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
         try {
-            Employee existingEmployee = employeeService.getEmployeeById(id);
-            return ResponseEntity.ok(existingEmployee);
+            User existingUser = userService.getUserById(id);
+            return ResponseEntity.ok(existingUser);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -59,7 +59,7 @@ public class EmployeeController {
 
 
     @GetMapping("")
-    public ResponseEntity<?> getEmployees(
+    public ResponseEntity<?> getUser(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
@@ -68,22 +68,22 @@ public class EmployeeController {
                 //Sắp xếp theo thứ tự createdAt giảm dần
                 Sort.by("hireDate").descending());
 
-        Page<Employee> employeePage = employeeService.getAllEmployees(pageRequest);
+        Page<User> userPage = userService.getAllUsers(pageRequest);
 
-        int totalPages = employeePage.getTotalPages();
+        int totalPages = userPage.getTotalPages();
 
-        List<Employee> employees = employeePage.getContent();
+        List<User> users = userPage.getContent();
 
-        return ResponseEntity.ok(employees);
+        return ResponseEntity.ok(users);
     }
 
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody UserDTO userDTO) {
         try {
-            Employee updateEmployee = employeeService.updateEmployee(id, employeeDTO);
-            return ResponseEntity.ok(updateEmployee);
+            User updateUser = userService.updateUser(id, userDTO);
+            return ResponseEntity.ok(updateUser);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -92,13 +92,13 @@ public class EmployeeController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEmployee(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         try {
-            Employee existingEmployee = employeeService.getEmployeeById(id);
+            User existingEmployee = userService.getUserById(id);
             if(existingEmployee != null) {
-                employeeService.deleteEmployee(id);
+                userService.deleteUser(id);
             }
-            return ResponseEntity.ok("Deleted employee successfully with ID: " + id);
+            return ResponseEntity.ok("Deleted user successfully with ID: " + id);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

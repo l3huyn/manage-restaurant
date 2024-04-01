@@ -21,10 +21,6 @@ public class Order {
     @JoinColumn(name = "table_id")
     private DiningTable diningTable;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
     @Column(name = "fullname", length = 100)
     private String fullName;
 
@@ -47,7 +43,7 @@ public class Order {
     private String paymentMethod;
 
     @Column(name = "discount")
-    private int discount;
+    private Float discount;
 
     @Column(name = "the_discounted_price")
     private Float theDiscountedPrice;
@@ -57,7 +53,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private Employee employee;
+    private User employee;
 
     @Column(name = "active")
     private Boolean active; //thuộc về admin

@@ -3,10 +3,10 @@ package com.project.restaurant.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
 
 @Data
 @Getter
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeDTO {
+public class UserDTO {
     @JsonProperty("fullname")
     @NotBlank(message = "Fullname is required")
     private String fullName;
@@ -33,5 +33,9 @@ public class EmployeeDTO {
     private Date hireDate;
 
     private Float salary;
+
+    @NotNull(message = "Role ID is required")
+    @JsonProperty("role_id")
+    private Long roleId;
 
 }

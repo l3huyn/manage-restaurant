@@ -1,6 +1,7 @@
 package com.project.restaurant.services;
 
 import com.project.restaurant.dtos.CategoryDTO;
+import com.project.restaurant.exceptions.DataNotFoundException;
 import com.project.restaurant.models.Category;
 import com.project.restaurant.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -67,8 +68,12 @@ public class CategoryService implements ICategoryService{
 
     //HÀM XÓA CATEGORY
     @Override
-    public void deleteCategory(long id) {
+    public void deleteCategory(long id) throws Exception {
         //Xóa cứng
-        categoryRepository.deleteById(id);
+        Category existingCategory = categoryRepository
+                .findById(id).orElseThrow(()-> new RuntimeException("Category not found"));
+        if(existingCategory != null) {
+            categoryRepository.deleteById(id);
+        }
     }
 }

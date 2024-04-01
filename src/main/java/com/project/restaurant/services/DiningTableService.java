@@ -4,7 +4,11 @@ import com.project.restaurant.dtos.DiningTableDTO;
 import com.project.restaurant.exceptions.DataNotFoundException;
 import com.project.restaurant.models.DiningTable;
 import com.project.restaurant.repositories.DiningTableRepository;
+import com.project.restaurant.responses.DiningTableListResponse;
+import com.project.restaurant.responses.DiningTableResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,13 +42,10 @@ public class DiningTableService implements IDiningTableService{
                 .orElseThrow(() -> new DataNotFoundException("Cannot find dining table with id: " + id));
     }
 
-
-
     @Override
-    public List<DiningTable> getAllDiningTables() {
-        return diningTableRepository.findAll();
+    public Page<DiningTableResponse> getAllDiningTables(PageRequest pageRequest) {
+        return diningTableRepository.findAll(pageRequest).map(DiningTableResponse::fromDiningTable);
     }
-
 
 
     @Override

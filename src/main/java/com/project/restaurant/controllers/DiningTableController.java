@@ -4,10 +4,15 @@ package com.project.restaurant.controllers;
 import com.project.restaurant.dtos.DiningTableDTO;
 import com.project.restaurant.exceptions.DataNotFoundException;
 import com.project.restaurant.models.DiningTable;
+import com.project.restaurant.responses.DiningTableListResponse;
+import com.project.restaurant.responses.DiningTableResponse;
 import com.project.restaurant.services.DiningTableService;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -49,9 +54,27 @@ public class DiningTableController {
 
     //HÀM LẤY TẤT CẢ CÁC BÀN
     @GetMapping("") //http://localhost:8088/api/v1/dining_tables?page=1&limit=10
-    public ResponseEntity< List<DiningTable>> getAllDiningTables() {
-        List<DiningTable> diningTables = diningTableService.getAllDiningTables();
-        return ResponseEntity.ok(diningTables);
+    public ResponseEntity<DiningTableListResponse> getAllDiningTables(
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit
+    ) {
+        PageRequest pageRequest = PageRequest.of(
+                page, limit,
+                //Sắp xếp theo thứ tự createdAt giảm dần
+                Sort.by("id").ascending());
+
+
+        Page<DiningTableResponse> diningTablePage = diningTableService.getAllDiningTables(pageRequest);
+
+        int totalPages = diningTablePage.getTotalPages();
+
+        List<DiningTableResponse> diningTables = diningTablePage.getContent();
+
+        return ResponseEntity.ok(DiningTableListResponse
+                .builder()
+                        .diningTables(diningTables)
+                        .totalPages(totalPages)
+                .build());
     }
 
     //HÀM LẤY BÀN BẰNG ID

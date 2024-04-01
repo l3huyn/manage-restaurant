@@ -1,6 +1,7 @@
 package com.project.restaurant.controllers;
 
 import com.project.restaurant.dtos.CategoryDTO;
+import com.project.restaurant.exceptions.DataNotFoundException;
 import com.project.restaurant.models.Category;
 import com.project.restaurant.services.CategoryService;
 import jakarta.validation.Valid;
@@ -71,8 +72,13 @@ public class CategoryController {
     //HÀM XÓA MỘT CATEGORIES -> Xóa cứng
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long id){
-       categoryService.deleteCategory(id);
-        return ResponseEntity.ok("Delete menu category with ID: " + id + " successfully");
+        try {
+            categoryService.deleteCategory(id);
+            return ResponseEntity.ok("Delete menu category with ID: " + id + " successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
 }
